@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import world.bentobox.bentobox.database.objects.Island;
+import java.util.Optional;
 
 public class placeitem implements Listener
 {
@@ -19,14 +20,21 @@ public class placeitem implements Listener
                 final String[] splitlore = lore.split(" ");
                 final float x = Float.parseFloat(splitlore[1]);
                 final float z = Float.parseFloat(splitlore[3]);
-                Island island = new Island();
-                final Location locile = island.getCenter();
-                if (locile.getX() == x && locile.getZ() == z) {
-                    e.getBlockPlaced();
-                }
-                else {
-                    e.getPlayer().sendMessage("§4[ATTENTION] : §6Vous ne pouvez pas poser cet item sur cette \u00eele !!!");
-                    e.setCancelled(true);
+
+                Optional<Island> islandAt = BentoBox.getInstance().getIslandsManager().getIslandAt(loc);
+
+                if (islandAt.isPresent())
+                {
+                    Island island = islandAt.get();
+
+                    final Location locile = island.getCenter();
+                    if (locile.getX() == x && locile.getZ() == z) {
+                        e.getBlockPlaced();
+                    }
+                    else {
+                        e.getPlayer().sendMessage("§4[ATTENTION] : §6Vous ne pouvez pas poser cet item sur cette \u00eele !!!");
+                        e.setCancelled(true);
+                    }
                 }
             }
         }
