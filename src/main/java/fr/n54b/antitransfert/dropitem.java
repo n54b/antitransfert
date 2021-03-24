@@ -13,6 +13,7 @@ import world.bentobox.bentobox.database.objects.Island;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.Optional;
 
 public class dropitem implements Listener
 {
@@ -27,20 +28,25 @@ public class dropitem implements Listener
         try {
             if (!Item.getItemStack().getItemMeta().hasLore()) {
                 final Location locitem = Item.getLocation();
-                Island island = new Island();
-                final Location locile = island.getCenter();
-                final UUID playeruuid = island.getOwner();
-                final String uuid = playeruuid.toString();
-                final String player = Bukkit.getServer().getOfflinePlayer(UUID.fromString(uuid)).getName();
-                final ItemMeta ItemL = Item.getItemStack().getItemMeta();
-                final ArrayList<String> lore = new ArrayList<String>();
-                lore.add("§2Chef de l'\u00eele: " + player);
-                lore.add("§2Localisation: " + locile.getX() + " " + locile.getY() + " " + locile.getZ());
-                lore.add("§4Ce block peut \u00eatre pos\u00e9 que sur l'\u00eele");
-                lore.add("§4ou il a \u00e9t\u00e9 cass\u00e9 !! ");
-                lore.add("§4NE PEUT PAS ETRE VENDU OU DONNE !! ");
-                ItemL.setLore((List)lore);
-                Item.getItemStack().setItemMeta(ItemL);
+                Optional<Island> islandAt = BentoBox.getInstance().getIslandsManager().getIslandAt(locitem);
+                
+                if (islandAt.isPresent())
+                {
+                    Island island = islandAt.get();
+                    final Location locile = island.getCenter();
+                    final UUID playeruuid = island.getOwner();
+                    final String uuid = playeruuid.toString();
+                    final String player = Bukkit.getServer().getOfflinePlayer(UUID.fromString(uuid)).getName();
+                    final ItemMeta ItemL = Item.getItemStack().getItemMeta();
+                    final ArrayList<String> lore = new ArrayList<String>();
+                    lore.add("§2Chef de l'\u00eele: " + player);
+                    lore.add("§2Localisation: " + locile.getX() + " " + locile.getY() + " " + locile.getZ());
+                    lore.add("§4Ce block peut \u00eatre pos\u00e9 que sur l'\u00eele");
+                    lore.add("§4ou il a \u00e9t\u00e9 cass\u00e9 !! ");
+                    lore.add("§4NE PEUT PAS ETRE VENDU OU DONNE !! ");
+                    ItemL.setLore((List)lore);
+                    Item.getItemStack().setItemMeta(ItemL);
+                }
             }
         }
         catch (NullPointerException npe) {}
