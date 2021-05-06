@@ -21,7 +21,7 @@ public class dropitem implements Listener
     public void ondropitem(final ItemSpawnEvent e) {
         final Item Item = e.getEntity();
         if (Item.getItemStack().getType() != Material.DIRT && Item.getItemStack().getType() != Material.GRASS_BLOCK && Item.getItemStack().getType() != Material.MYCELIUM) {
-            if (Item.getItemStack().getType() != Material.RED_SAND) {
+            if (Item.getItemStack().getType() != Material.RED_SAND && Item.getItemStack().getType() != Material.SAND && Item.getItemStack().getType() != Material.PODZOL) {
                 return;
             }
         }
